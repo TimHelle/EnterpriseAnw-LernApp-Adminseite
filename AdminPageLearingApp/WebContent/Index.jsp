@@ -41,20 +41,6 @@
 					<div class="CategoryListDiv" style="background-color: red">
 						<h3>Category</h3>
 						<div class="CategoryList">
-							<%
-						       String recieve;
-						       String buffer = "";
-						       URL jsonpage = new URL("http://51.137.215.185:9000/api/categories");
-						       URLConnection urlcon = jsonpage.openConnection();
-						       BufferedReader buffread = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
-						
-						       while ((recieve = buffread.readLine()) != null)
-						        buffer += recieve;
-						       buffread.close();
-						
-						       System.out.println(buffer);
-						    %>
-						    
 						    <c:forEach var="categories" items="${categories}" varStatus="i">
 							   <c:set var="categoryID" value="${categories.Id}"/>
 							  <table>
@@ -64,8 +50,6 @@
 							    </tr>
 							  </table>
 							</c:forEach>
-							
-							
 						</div>
 					</div>				
 				</td>
