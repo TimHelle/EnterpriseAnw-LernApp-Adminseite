@@ -27,8 +27,7 @@ import Model.UserModel;
 
 @WebServlet("/AdminPage")
 public class IndexController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 1L;	
        
     public IndexController() {
         super();
@@ -184,7 +183,8 @@ public class IndexController extends HttpServlet {
 	    	}
 	    	if(QuestionModel.addQuestionToList(question) != true) {
 	    		System.out.println("Category wurde nicht hinzugefügt.");
-	    	}	    	
+	    	}	   
 	    }
+	    System.out.println(QuestionModel.ToStringQuestionList());
 	}
 }
