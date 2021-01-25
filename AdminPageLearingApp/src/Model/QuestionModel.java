@@ -9,7 +9,7 @@ public class QuestionModel {
 	private String text;
 	private String explanation;
 	private CategoryModel category;
-	private List<AnswerModel> answer = new ArrayList<AnswerModel>();
+	private List<AnswerModel> answers = new ArrayList<AnswerModel>();
 	
 	public static List<QuestionModel> questionList = new ArrayList<QuestionModel>();
 	
@@ -37,11 +37,11 @@ public class QuestionModel {
 	public void setCategory(CategoryModel category) {
 		this.category = category;
 	}
-	public List<AnswerModel> getAnswer() {
-		return answer;
+	public List<AnswerModel> getAnswers() {
+		return answers;
 	}
 	public void setAnswer(AnswerModel answer) {
-		this.answer.add(answer);
+		this.answers.add(answer);
 	}
 	
 	public static List<QuestionModel> getQuestionList(){
@@ -71,15 +71,15 @@ public class QuestionModel {
 			return false;
 		}
 	}
-	public static String ToStringCategoryList() {
+	public static String ToStringQuestionList() {
 		StringBuilder sb = new StringBuilder();
 		StringBuilder answers = new StringBuilder();
 		for(QuestionModel item : questionList) {
 			sb.append("Id: " + item.getId() + "\n");
 			sb.append("Text: " + item.getText() + "\n");
 			sb.append("Explanation: " + item.getExplanation() + "\n");
-			sb.append("Category: " + item.getCategory() + "\n");
-			for(AnswerModel answerItem : item.getAnswer())
+			sb.append("Category: " + item.getCategory().getTitle() + "\n");
+			for(AnswerModel answerItem : item.getAnswers())
 			{
 				answers.append("Id: " + answerItem.getId() + "\n");
 				answers.append("Text: " + answerItem.getText() + "\n");
