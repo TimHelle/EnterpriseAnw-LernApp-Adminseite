@@ -8,6 +8,8 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Model.AnswerModel;
 import Model.CategoryModel;
 import Model.QuestionModel;
 
@@ -73,9 +76,44 @@ public class QuestionController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String s = request.getParameter("test");
-		response.getOutputStream().println(s);
+		QuestionModel question = new QuestionModel();
+		CategoryModel category = new CategoryModel();
+		List<CategoryModel> list = new ArrayList<CategoryModel>();
+		AnswerModel rightAnswer = new AnswerModel();
+		AnswerModel wrongAnswerOne = new AnswerModel();
+		AnswerModel wrongAnswerTwo = new AnswerModel();
+		AnswerModel wrongAnswerThree = new AnswerModel();
+		
+		list = CategoryModel.getCategoryList();
+		question.setText(request.getParameter("questionText"));
+		question.setExplanation(request.getParameter("explanationTextfield"));
+		category.setTitle(request.getParameter("selection"));		
+		for(CategoryModel item : list) {
+			if(category.getTitle().equals(item.getTitle())) {
+				category.setDescription(item.getDescription());
+				category.setId(item.getId());
+			}
+		}
+		question.setCategory(category);
+		rightAnswer.setText(request.getParameter("rightAnswerText"));
+		rightAnswer.setCorrect(true);
+		rightAnswer.setDescription(request.getParameter("rightAnswerDescription"));
+		wrongAnswerOne.setText(request.getParameter("wrongAnswerOneText"));
+		wrongAnswerOne.setCorrect(false);
+		wrongAnswerOne.setDescription(request.getParameter("wrongAnswerOneDescription"));
+		wrongAnswerTwo.setText(request.getParameter("wrongAnswerTwoText"));
+		wrongAnswerTwo.setCorrect(false);
+		wrongAnswerTwo.setDescription(request.getParameter("wrongAnswerTwoDescription"));
+		wrongAnswerThree.setText(request.getParameter("wrongAnswerThreeText"));
+		wrongAnswerThree.setCorrect(false);
+		wrongAnswerThree.setDescription(request.getParameter("wrongAnswerThreeDescription"));		
+		
+		question.setAnswer(rightAnswer);
+		question.setAnswer(wrongAnswerOne);
+		question.setAnswer(wrongAnswerTwo);
+		question.setAnswer(wrongAnswerThree);
+		
+		response.getOutputStream().println(question.ToStringQuestionList());
 	}	
 	
 	private String hashQuestion(QuestionModel question) throws NoSuchAlgorithmException {

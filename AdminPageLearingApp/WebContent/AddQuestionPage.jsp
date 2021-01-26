@@ -99,26 +99,38 @@
 								    	<td><a>Right answer:</a></td>
 								    </tr>							 
 								    <tr>
-								    	<td><input name="rightAnswer" style="width:98%" placeholder="Type in your right answer here?"></td>
-								    </tr>    
+								    	<td><input name="rightAnswerText" style="width:98%" placeholder="Type in your right answer here?"></td>
+								    </tr>  
+								    <tr>
+								    	<td><input name="rightAnswerDescription" style="width:98%" placeholder="Type in your explanation here?"></td>
+								    </tr>  
 								    <tr>
 								    	<td><a>Wrong answer one:</a></td>
 								    </tr>							 
 								    <tr>
-								    	<td><input name="wrongAnswerOne" style="width:98%" placeholder="Type in your wrong answer here?"></td>
+								    	<td><input name="wrongAnswerOneText" style="width:98%" placeholder="Type in your wrong answer here?"></td>
+								    </tr>
+								    <tr>
+								    	<td><input name="wrongAnswerOneDescription" style="width:98%" placeholder="Type in your explanation here?"></td>
 								    </tr>
 								    <tr>
 								    	<td><a>Wrong answer two:</a></td>
 								    </tr>							 
 								    <tr>
-								    	<td><input name="wrongAnswerTwo" style="width:98%" placeholder="Type in your wrong answer here?"></td>
-								    </tr>  
+								    	<td><input name="wrongAnswerTwoText" style="width:98%" placeholder="Type in your wrong answer here?"></td>
+								    </tr> 
+								    <tr>
+								    	<td><input name="wrongAnswerTwoDescription" style="width:98%" placeholder="Type in your explanation here?"></td>
+								    </tr> 
 								    <tr>
 								    	<td><a>Wrong answer three:</a></td>
 								    </tr>							 
 								    <tr>
-								    	<td><input name="wrongAnswerThree" style="width:98%" placeholder="Type in your wrong answer here?"></td>
+								    	<td><input name="wrongAnswerThreeText" style="width:98%" placeholder="Type in your wrong answer here?"></td>
 								    </tr> 
+								    <tr>
+								    	<td><input name="wrongAnswerThreeDescription" style="width:98%" placeholder="Type in your explanation here?"></td>
+								    </tr>
 							  </table>
 						    </div>
 						</div>
