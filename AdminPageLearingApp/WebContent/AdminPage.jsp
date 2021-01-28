@@ -18,7 +18,7 @@
 					<button class="AddNewQuestion" onclick="window.location.href='/AdminPageLearingApp/QuestionController'">Question</button>
 				</td>
 				<td style="text-align:center;width:30%">
-					<button class="AddNewCategory"><a href="CategoryController">Category</a></button>
+					<button class="AddNewCategory" onclick="window.location.href='/AdminPageLearingApp/CategoryController'">Category</button>
 				</td>
 				<td style="text-align:center;width:30%">
 					<button class="AddJSONContent"><a href="JsonController">JSON</a></button>		

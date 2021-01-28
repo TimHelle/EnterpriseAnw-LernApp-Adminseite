@@ -78,8 +78,6 @@ public class QuestionController extends HttpServlet {
 			StringBuilder sb = new StringBuilder();
 			list = CategoryModel.getCategoryList();
 			
-			System.out.println("Testvalue: " + request.getParameter("questionText") + "\n\n");
-			
 			if (request.getParameter("questionText") != null && 
 				request.getParameter("explanationTextfield") != null && 
 				request.getParameter("selection") != null &&
@@ -135,7 +133,7 @@ public class QuestionController extends HttpServlet {
 				sb.append("Wrong answer: " + request.getParameter("wrongAnswerOneText")+ "\n");
 				sb.append("Wrong answer: " + request.getParameter("wrongAnswerTwoText")+ "\n");
 				sb.append("Wrong answer: " + request.getParameter("wrongAnswerThreeText")+ "\n");
-				System.out.println(sb.toString() + "\n" + "There is something missing!");				
+				System.out.println(sb.toString() + "\n" + "There is something missing in question!");				
 			}			
 		}
 		else
