@@ -85,13 +85,15 @@ public class IndexController extends HttpServlet {
 	    for(int i=0;i<jsonArray.length();i++) {
 	    	JSONObject item = jsonArray.getJSONObject(i);
 	    	CategoryModel category = new CategoryModel();
-	    	category.setId(item.optInt("id"));
 	    	category.setDescription(item.optString("description"));
 	    	category.setTitle(item.getString("title"));
 	    	if(CategoryModel.addCategoryToList(category) != true) {
 	    		System.out.println("Category wurde nicht hinzugefügt.");
 	    	}	    	
 	    }
+	    
+	    //TODO hash mit speichern
+	    
 	    //System.out.println(CategoryModel.ToStringCategoryList());
 	}
 	
@@ -121,12 +123,12 @@ public class IndexController extends HttpServlet {
 	    for(int i=0;i<jsonArray.length();i++) {
 	    	JSONObject item = jsonArray.getJSONObject(i);
 	    	UserModel user = new UserModel();
-	    	user.setId(item.optInt("id"));
 	    	user.setUsername(item.optString("username"));
 	    	if(UserModel.addUserToList(user) != true) {
 	    		System.out.println("Category wurde nicht hinzugefügt.");
 	    	}	
 	    }
+	    
 	  //System.out.println(UserModel.ToStringUserList());
 	}
 	
@@ -155,16 +157,14 @@ public class IndexController extends HttpServlet {
 	    for(int i=0;i<jsonArray.length();i++) {
 	    	JSONObject item = jsonArray.getJSONObject(i);
 	    	QuestionModel question = new QuestionModel();
-	    	question.setId(item.optInt("id"));
 	    	question.setText(item.optString("text"));
 	    	question.setExplanation(item.optString("explanation"));
 	    	
 	    	//Get CategoryId from API and change to CategoryModel 
 	    	CategoryModel category = new CategoryModel();
-	    	int categoryId = item.optInt("category");
+	    	String categoryTitle = item.optString("category");
 	    	for(CategoryModel categoryItem : CategoryModel.categoryList) {
-	    		if(categoryItem.getId() == categoryId) {
-	    			category.setId(categoryItem.getId());
+	    		if(categoryItem.getTitle() == categoryTitle) {
 	    			category.setTitle(categoryItem.getTitle());
 	    			category.setDescription(category.getDescription());
 	    			break;
@@ -176,7 +176,6 @@ public class IndexController extends HttpServlet {
 	    	JSONArray array = item.getJSONArray("answers");
 	    	for(int j =0; j<array.length();j++) {
 	    		JSONObject obj = array.getJSONObject(j);
-	    		answer.setId(obj.optInt("id"));
 	    		answer.setText(obj.optString("text"));
 	    		answer.setCorrect(obj.optBoolean("isCorrect"));
 	    		question.setAnswer(answer);
@@ -185,6 +184,9 @@ public class IndexController extends HttpServlet {
 	    		System.out.println("Category wurde nicht hinzugefügt.");
 	    	}	   
 	    }
-	    System.out.println(QuestionModel.ToStringQuestionList());
+	    
+	    //TODO Hash mit speichern
+	    
+	    //System.out.println(QuestionModel.ToStringQuestionList());
 	}
 }

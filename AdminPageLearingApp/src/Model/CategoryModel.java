@@ -5,17 +5,11 @@ import java.util.List;
 
 public class CategoryModel {
 	
-	private int id;
 	private String description;
 	private String title;
+	private String hash;
 	public static List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public String getDescription() {
 		return description;
 	}
@@ -27,6 +21,12 @@ public class CategoryModel {
 	}
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public String getHash() {
+		return hash;
+	}
+	public void setHash(String hash) {
+		this.hash = hash;
 	}
 	public static List<CategoryModel> getCategoryList() {
 		return categoryList;
@@ -58,9 +58,9 @@ public class CategoryModel {
 	public static String ToStringCategoryList() {
 		StringBuilder sb = new StringBuilder();
 		for(CategoryModel item : categoryList) {
-			sb.append("Id: " + item.getId() + "\n");
 			sb.append("Description: " + item.getDescription() + "\n");
 			sb.append("Title: " + item.getTitle() + "\n");
+			sb.append("Hashcode: "+ item.getHash() + "\n");
 		}
 		return sb.toString();
 	}

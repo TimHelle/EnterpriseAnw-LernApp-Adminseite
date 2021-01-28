@@ -5,19 +5,19 @@ import java.util.List;
 
 public class QuestionModel {
 	
-	private int id;
 	private String text;
 	private String explanation;
 	private CategoryModel category;
+	private String hash;
 	private List<AnswerModel> answers = new ArrayList<AnswerModel>();
 	
 	public static List<QuestionModel> questionList = new ArrayList<QuestionModel>();
 	
-	public int getId() {
-		return id;
+	public String getHash() {
+		return hash;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setHash(String hash) {
+		this.hash = hash;
 	}
 	public String getText() {
 		return text;
@@ -75,13 +75,12 @@ public class QuestionModel {
 		StringBuilder sb = new StringBuilder();
 		StringBuilder answers = new StringBuilder();
 		for(QuestionModel item : questionList) {
-			sb.append("Id: " + item.getId() + "\n");
 			sb.append("Text: " + item.getText() + "\n");
 			sb.append("Explanation: " + item.getExplanation() + "\n");
 			sb.append("Category: " + item.getCategory().getTitle() + "\n");
+			sb.append("Hashcode: " + item.getHash());
 			for(AnswerModel answerItem : item.getAnswers())
 			{
-				answers.append("Id: " + answerItem.getId() + "\n");
 				answers.append("Text: " + answerItem.getText() + "\n");
 				answers.append("Description: " + answerItem.getDescription() + "\n");
 			}
