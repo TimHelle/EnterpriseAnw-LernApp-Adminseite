@@ -2,17 +2,11 @@ package Model;
 
 public class AnswerModel {
 	
-	private int id;
+
 	private String text;
 	private String description;
 	private boolean isCorrect;
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public String getText() {
 		return text;
 	}

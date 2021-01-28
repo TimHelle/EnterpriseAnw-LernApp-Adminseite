@@ -15,7 +15,7 @@
 		<table style="background-color: #24387f;height:75px;width:100%">
 			<tr style="height:100%;width:100%">
 				<td style="text-align:center;width:30%;">
-					<button class="AddNewQuestion"><a href="QuestionController">Question</a></button>
+					<button class="AddNewQuestion" onclick="window.location.href='/AdminPageLearingApp/QuestionController'">Question</button>
 				</td>
 				<td style="text-align:center;width:30%">
 					<button class="AddNewCategory"><a href="CategoryController">Category</a></button>

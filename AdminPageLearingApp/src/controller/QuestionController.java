@@ -8,6 +8,8 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,10 +18,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Model.AnswerModel;
 import Model.CategoryModel;
 import Model.QuestionModel;
 
@@ -46,20 +52,6 @@ public class QuestionController extends HttpServlet {
 		getCategories();
 		request.setAttribute("categoriesForQuestion", CategoryModel.getCategoryList());
 		
-		QuestionModel question = new QuestionModel();
-		CategoryModel cat = new CategoryModel();
-		question.setId(1);
-		question.setText("Test");
-		question.setExplanation("Text");
-		cat.setTitle("test");
-		cat.setDescription("descrip");
-		question.setCategory(cat);
-		
-		try {
-			System.out.println(hashQuestion(question));
-		} catch (NoSuchAlgorithmException e1) {
-			e1.printStackTrace();
-		}
 		try {
 			RequestDispatcher reqDis = request.getRequestDispatcher("AddQuestionPage.jsp");
 			reqDis.forward(request, response);
@@ -73,10 +65,98 @@ public class QuestionController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String s = request.getParameter("test");
-		response.getOutputStream().println(s);
+		if(request.getParameter("submitButton") != null)
+		{
+			QuestionModel question = new QuestionModel();
+			CategoryModel category = new CategoryModel();
+			List<CategoryModel> list = new ArrayList<CategoryModel>();
+			AnswerModel rightAnswer = new AnswerModel();
+			AnswerModel wrongAnswerOne = new AnswerModel();
+			AnswerModel wrongAnswerTwo = new AnswerModel();
+			AnswerModel wrongAnswerThree = new AnswerModel();
+			boolean filled = false;			
+			StringBuilder sb = new StringBuilder();
+			list = CategoryModel.getCategoryList();
+			
+			System.out.println("Testvalue: " + request.getParameter("questionText") + "\n\n");
+			
+			if (request.getParameter("questionText") != null && 
+				request.getParameter("explanationTextfield") != null && 
+				request.getParameter("selection") != null &&
+				request.getParameter("rightAnswerText") != null &&
+			    request.getParameter("wrongAnswerOneText") != null &&
+			    request.getParameter("wrongAnswerTwoText") != null &&
+			    request.getParameter("wrongAnswerThreeText") != null) 
+			{				
+				question.setText(request.getParameter("questionText"));
+				question.setExplanation(request.getParameter("explanationTextfield"));
+				category.setTitle(request.getParameter("selection"));
+				for(CategoryModel item : list) {
+					if(category.getTitle().equals(item.getTitle())) {
+						category.setDescription(item.getDescription());
+					}
+				}
+				question.setCategory(category);
+				
+				rightAnswer.setText(request.getParameter("rightAnswerText"));
+				rightAnswer.setCorrect(true);
+				rightAnswer.setDescription(request.getParameter("rightAnswerDescription"));
+				wrongAnswerOne.setText(request.getParameter("wrongAnswerOneText"));
+				wrongAnswerOne.setCorrect(false);
+				wrongAnswerOne.setDescription(request.getParameter("wrongAnswerOneDescription"));
+				wrongAnswerTwo.setText(request.getParameter("wrongAnswerTwoText"));
+				wrongAnswerTwo.setCorrect(false);
+				wrongAnswerTwo.setDescription(request.getParameter("wrongAnswerTwoDescription"));
+				wrongAnswerThree.setText(request.getParameter("wrongAnswerThreeText"));
+				wrongAnswerThree.setCorrect(false);
+				wrongAnswerThree.setDescription(request.getParameter("wrongAnswerThreeDescription"));	
+				
+				question.setAnswer(rightAnswer);
+				question.setAnswer(wrongAnswerOne);
+				question.setAnswer(wrongAnswerTwo);
+				question.setAnswer(wrongAnswerThree);
+				try {
+					question.setHash(hashQuestion(question));
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				}
+				filled = true;
+			}
+			
+			if(filled == true)
+			{
+				response.getOutputStream().println(objectToJson(question));
+			}
+			else {
+				sb.append("Question: " + request.getParameter("questionText") + "\n");
+				sb.append("Question explanation: " + request.getParameter("explanationTextfield")+ "\n");
+				sb.append("Selection: " + request.getParameter("selection")+ "\n");
+				sb.append("Right answer: " + request.getParameter("rightAnswerText")+ "\n");
+				sb.append("Wrong answer: " + request.getParameter("wrongAnswerOneText")+ "\n");
+				sb.append("Wrong answer: " + request.getParameter("wrongAnswerTwoText")+ "\n");
+				sb.append("Wrong answer: " + request.getParameter("wrongAnswerThreeText")+ "\n");
+				System.out.println(sb.toString() + "\n" + "There is something missing!");				
+			}			
+		}
+		else
+		{
+			System.out.println("SubmitButton not found.");
+		}
+		
 	}	
+	
+	private String objectToJson(QuestionModel question) {
+		String json = "";
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			json = mapper.writeValueAsString(question);
+			return json;
+		}
+		catch(Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+		return "Error";
+	}
 	
 	private String hashQuestion(QuestionModel question) throws NoSuchAlgorithmException {
 		String QuestionString = question.getText() + question.getExplanation() + question.getCategory().getTitle() + question.getCategory().getDescription();
@@ -123,7 +203,6 @@ public class QuestionController extends HttpServlet {
 	    for(int i=0;i<jsonArray.length();i++) {
 	    	JSONObject item = jsonArray.getJSONObject(i);
 	    	CategoryModel category = new CategoryModel();
-	    	category.setId(item.optInt("id"));
 	    	category.setDescription(item.optString("description"));
 	    	category.setTitle(item.getString("title"));
 	    	if(CategoryModel.addCategoryToList(category) != true) {

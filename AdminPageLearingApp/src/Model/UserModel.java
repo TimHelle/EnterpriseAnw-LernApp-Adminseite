@@ -5,16 +5,9 @@ import java.util.List;
 
 public class UserModel {
 	
-	private int id;
 	private String username;
 	public static List<UserModel> userList = new ArrayList<UserModel>();
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public String getUsername() {
 		return username;
 	}
@@ -51,7 +44,6 @@ public class UserModel {
 	public static String ToStringUserList() {
 		StringBuilder sb = new StringBuilder();
 		for(UserModel item : userList) {
-			sb.append("Id: " + item.getId() + "\n");
 			sb.append("Username: " + item.getUsername() + "\n");
 		}
 		return sb.toString();
