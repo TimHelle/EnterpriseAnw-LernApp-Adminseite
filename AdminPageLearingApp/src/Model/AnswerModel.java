@@ -1,28 +1,26 @@
 package Model;
 
-public class AnswerModel {
-	
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"text","isCorrect"})
+public class AnswerModel {	
 
 	private String text;
-	private String description;
 	private boolean isCorrect;
 	
+	@JsonProperty("text")
 	public String getText() {
 		return text;
 	}
 	public void setText(String text) {
 		this.text = text;
 	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	@JsonProperty("isCorrect")
 	public boolean isCorrect() {
 		return isCorrect;
 	}
-	public void setCorrect(boolean isCorrect) {
+	public void setIsCorrect(boolean isCorrect) {
 		this.isCorrect = isCorrect;
 	}
 	

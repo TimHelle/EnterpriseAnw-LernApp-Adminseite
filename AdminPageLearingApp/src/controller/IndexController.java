@@ -35,17 +35,14 @@ public class IndexController extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		request.setCharacterEncoding("UTF-8");
 		//Load all Categories from Backend
 		getCategories();
 		request.setAttribute("categories", CategoryModel.getCategoryList());
-		//Load all Users from Backend
-		//getUsers();
-		//request.setAttribute("users", UserModel.getUserList());
-		//Load all Users from Backend
+		//Load all Questions from Backend
 		getQuestions();
 		request.setAttribute("questions", QuestionModel.getQuestionList());
-		//Load the AdminPage.jsp
+		//Load the AdminPage.jsp		
 		try {
 			RequestDispatcher reqDis = request.getRequestDispatcher("AdminPage.jsp");
 			reqDis.forward(request, response);
@@ -64,7 +61,7 @@ public class IndexController extends HttpServlet {
 		CategoryModel.categoryList.clear();
 		
 		URL jsonpage = new URL("http://51.137.215.185:9000/api/categories");
-	    URLConnection urlcon = jsonpage.openConnection();	    
+	    URLConnection urlcon = jsonpage.openConnection();	
 	    
 	    StringBuffer jb = new StringBuffer();
 	    String line = null;
@@ -85,15 +82,14 @@ public class IndexController extends HttpServlet {
 	    for(int i=0;i<jsonArray.length();i++) {
 	    	JSONObject item = jsonArray.getJSONObject(i);
 	    	CategoryModel category = new CategoryModel();
+	    	category.setId((int) item.opt("id"));
 	    	category.setDescription(item.optString("description"));
-	    	category.setTitle(item.getString("title"));
-	    	if(CategoryModel.addCategoryToList(category) != true) {
+	    	category.setTitle(item.optString("title"));
+	    	category.setHash(item.optString("hash"));
+	    	if(CategoryModel.addCategoryToList(category) != true && category != null) {
 	    		System.out.println("Category wurde nicht hinzugefügt.");
 	    	}	    	
 	    }
-	    
-	    //TODO hash mit speichern
-	    
 	    //System.out.println(CategoryModel.ToStringCategoryList());
 	}
 	
@@ -157,36 +153,39 @@ public class IndexController extends HttpServlet {
 	    for(int i=0;i<jsonArray.length();i++) {
 	    	JSONObject item = jsonArray.getJSONObject(i);
 	    	QuestionModel question = new QuestionModel();
+	    	question.setId((int) item.opt("id"));
 	    	question.setText(item.optString("text"));
 	    	question.setExplanation(item.optString("explanation"));
 	    	
 	    	//Get CategoryId from API and change to CategoryModel 
 	    	CategoryModel category = new CategoryModel();
-	    	String categoryTitle = item.optString("category");
+	    	JSONObject categoryJsonObject = item.getJSONObject("category");	    	
+	    	String categoryTitle = categoryJsonObject.optString("title");
 	    	for(CategoryModel categoryItem : CategoryModel.categoryList) {
-	    		if(categoryItem.getTitle() == categoryTitle) {
+	    		if(categoryItem.getTitle().equals(categoryTitle)) {
 	    			category.setTitle(categoryItem.getTitle());
-	    			category.setDescription(category.getDescription());
+	    			category.setDescription(categoryItem.getDescription());
+	    			category.setId(categoryItem.getId());
+	    			category.setHash(categoryItem.getHash());
 	    			break;
 	    		}
 	    	}
 	    	question.setCategory(category);
-	    	//Get AnswerId´s from API and change to AnswerModel
-	    	AnswerModel answer = new AnswerModel();	 
+	    	//Get AnswerId´s from API and change to AnswerModel	 
 	    	JSONArray array = item.getJSONArray("answers");
 	    	for(int j =0; j<array.length();j++) {
+	    		AnswerModel answer = new AnswerModel();
 	    		JSONObject obj = array.getJSONObject(j);
 	    		answer.setText(obj.optString("text"));
-	    		answer.setCorrect(obj.optBoolean("isCorrect"));
+	    		answer.setIsCorrect(obj.optBoolean("isCorrect"));
 	    		question.setAnswer(answer);
 	    	}
-	    	if(QuestionModel.addQuestionToList(question) != true) {
+	    	if(QuestionModel.addQuestionToList(question) != true && question != null) {
 	    		System.out.println("Category wurde nicht hinzugefügt.");
 	    	}	   
 	    }
 	    
-	    //TODO Hash mit speichern
-	    
+	    //TODO Hash mit speichern	    
 	    //System.out.println(QuestionModel.ToStringQuestionList());
 	}
 }

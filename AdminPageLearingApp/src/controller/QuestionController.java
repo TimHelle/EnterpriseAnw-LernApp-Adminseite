@@ -3,6 +3,8 @@ package controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -28,6 +30,8 @@ import org.json.JSONObject;
 import Model.AnswerModel;
 import Model.CategoryModel;
 import Model.QuestionModel;
+import Model.SendCategoryModel;
+import Model.SendQuestionModel;
 
 /**
  * Servlet implementation class QuestionController
@@ -35,13 +39,11 @@ import Model.QuestionModel;
 @WebServlet("/QuestionController")
 public class QuestionController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
     /**
      * @see HttpServlet#HttpServlet()
      */
     public QuestionController() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -51,7 +53,7 @@ public class QuestionController extends HttpServlet {
 		
 		getCategories();
 		request.setAttribute("categoriesForQuestion", CategoryModel.getCategoryList());
-		
+		System.out.println("Im doGet: \n" + CategoryModel.ToStringCategoryList());
 		try {
 			RequestDispatcher reqDis = request.getRequestDispatcher("AddQuestionPage.jsp");
 			reqDis.forward(request, response);
@@ -65,19 +67,19 @@ public class QuestionController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		URL backendURL = new URL("http://51.137.215.185:9000/api/questions");
+		HttpURLConnection connection = (HttpURLConnection) backendURL.openConnection();
 		if(request.getParameter("submitButton") != null)
 		{
-			QuestionModel question = new QuestionModel();
+			SendQuestionModel question = new SendQuestionModel();
 			CategoryModel category = new CategoryModel();
-			List<CategoryModel> list = new ArrayList<CategoryModel>();
 			AnswerModel rightAnswer = new AnswerModel();
 			AnswerModel wrongAnswerOne = new AnswerModel();
 			AnswerModel wrongAnswerTwo = new AnswerModel();
 			AnswerModel wrongAnswerThree = new AnswerModel();
+			SendCategoryModel sendCategory = new SendCategoryModel();
 			boolean filled = false;			
-			StringBuilder sb = new StringBuilder();
-			list = CategoryModel.getCategoryList();
-			
+			StringBuilder sb = new StringBuilder();					
 			if (request.getParameter("questionText") != null && 
 				request.getParameter("explanationTextfield") != null && 
 				request.getParameter("selection") != null &&
@@ -89,30 +91,34 @@ public class QuestionController extends HttpServlet {
 				question.setText(request.getParameter("questionText"));
 				question.setExplanation(request.getParameter("explanationTextfield"));
 				category.setTitle(request.getParameter("selection"));
-				for(CategoryModel item : list) {
-					if(category.getTitle().equals(item.getTitle())) {
-						category.setDescription(item.getDescription());
-					}
-				}
-				question.setCategory(category);
 				
 				rightAnswer.setText(request.getParameter("rightAnswerText"));
-				rightAnswer.setCorrect(true);
-				rightAnswer.setDescription(request.getParameter("rightAnswerDescription"));
+				rightAnswer.setIsCorrect(true);
+				//rightAnswer.setDescription(request.getParameter("rightAnswerDescription"));
 				wrongAnswerOne.setText(request.getParameter("wrongAnswerOneText"));
-				wrongAnswerOne.setCorrect(false);
-				wrongAnswerOne.setDescription(request.getParameter("wrongAnswerOneDescription"));
+				wrongAnswerOne.setIsCorrect(false);
+				//wrongAnswerOne.setDescription(request.getParameter("wrongAnswerOneDescription"));
 				wrongAnswerTwo.setText(request.getParameter("wrongAnswerTwoText"));
-				wrongAnswerTwo.setCorrect(false);
-				wrongAnswerTwo.setDescription(request.getParameter("wrongAnswerTwoDescription"));
+				wrongAnswerTwo.setIsCorrect(false);
+				//wrongAnswerTwo.setDescription(request.getParameter("wrongAnswerTwoDescription"));
 				wrongAnswerThree.setText(request.getParameter("wrongAnswerThreeText"));
-				wrongAnswerThree.setCorrect(false);
-				wrongAnswerThree.setDescription(request.getParameter("wrongAnswerThreeDescription"));	
+				wrongAnswerThree.setIsCorrect(false);
+				//wrongAnswerThree.setDescription(request.getParameter("wrongAnswerThreeDescription"));	
 				
 				question.setAnswer(rightAnswer);
 				question.setAnswer(wrongAnswerOne);
 				question.setAnswer(wrongAnswerTwo);
 				question.setAnswer(wrongAnswerThree);
+				
+				for(CategoryModel item : CategoryModel.getCategoryList()) {
+					if(category.getTitle().equals(item.getTitle())) {
+						category.setDescription(item.getDescription());
+						category.setId(item.getId());
+					}
+				}
+				sendCategory.setId(category.getId());
+				question.setCategory(sendCategory);
+				
 				try {
 					question.setHash(hashQuestion(question));
 				} catch (NoSuchAlgorithmException e) {
@@ -123,11 +129,38 @@ public class QuestionController extends HttpServlet {
 			
 			if(filled == true)
 			{
-				response.getOutputStream().println(objectToJson(question));
+				connection.setRequestMethod("POST");
+				connection.setRequestProperty("Content-Type", "application/json; utf-8");
+				connection.setDoOutput(true);
+				try(OutputStream os = connection.getOutputStream()) 
+				{
+					byte[] input = objectToJson(question).getBytes("utf-8");
+					os.write(input,0,input.length);
+				}
+				catch(Exception ex)
+				{
+					connection.disconnect();
+					System.out.println("Send request error: \n" + ex.getMessage());
+				}
+				StringBuilder responseString = new StringBuilder();
+				try(BufferedReader br = new BufferedReader(
+				  new InputStreamReader(connection.getInputStream(), "utf-8"))) {				    
+				    String responseLine = null;
+				    while ((responseLine = br.readLine()) != null) {
+				        responseString.append(responseLine.trim());
+				    }
+				    System.out.println("Response Stream: " + response.toString());
+				}
+				catch(Exception ex)
+				{
+					connection.disconnect();
+					System.out.println("Get response error: \n" + ex.getMessage());
+				}
+				response.getOutputStream().println(responseString.toString());
 			}
 			else {
 				sb.append("Question: " + request.getParameter("questionText") + "\n");
-				sb.append("Question explanation: " + request.getParameter("explanationTextfield")+ "\n");
+				//sb.append("Question explanation: " + request.getParameter("explanationTextfield")+ "\n");
 				sb.append("Selection: " + request.getParameter("selection")+ "\n");
 				sb.append("Right answer: " + request.getParameter("rightAnswerText")+ "\n");
 				sb.append("Wrong answer: " + request.getParameter("wrongAnswerOneText")+ "\n");
@@ -143,11 +176,12 @@ public class QuestionController extends HttpServlet {
 		
 	}	
 	
-	private String objectToJson(QuestionModel question) {
+	private String objectToJson(SendQuestionModel question) {
 		String json = "";
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			json = mapper.writeValueAsString(question);
+			json = mapper.writeValueAsString(question);	
+			System.out.println(json);
 			return json;
 		}
 		catch(Exception ex) {
@@ -156,8 +190,8 @@ public class QuestionController extends HttpServlet {
 		return "Error";
 	}
 	
-	private String hashQuestion(QuestionModel question) throws NoSuchAlgorithmException {
-		String QuestionString = question.getText() + question.getExplanation() + question.getCategory().getTitle() + question.getCategory().getDescription();
+	private String hashQuestion(SendQuestionModel question) throws NoSuchAlgorithmException {
+		String QuestionString = question.getText() + question.getExplanation();
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
 		byte[] hashbyte = digest.digest(QuestionString.getBytes(StandardCharsets.UTF_8));
 		String shaHex = bytesToHex(hashbyte);
@@ -201,8 +235,10 @@ public class QuestionController extends HttpServlet {
 	    for(int i=0;i<jsonArray.length();i++) {
 	    	JSONObject item = jsonArray.getJSONObject(i);
 	    	CategoryModel category = new CategoryModel();
+	    	category.setId((int) item.opt("id"));
 	    	category.setDescription(item.optString("description"));
-	    	category.setTitle(item.getString("title"));
+	    	category.setTitle(item.optString("title"));
+	    	category.setHash(item.optString("hash"));
 	    	if(CategoryModel.addCategoryToList(category) != true) {
 	    		System.out.println("Category wurde nicht hinzugefügt.");
 	    	}	    	

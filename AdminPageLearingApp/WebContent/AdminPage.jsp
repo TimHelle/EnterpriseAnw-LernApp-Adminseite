@@ -1,4 +1,4 @@
-<%@page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.io.BufferedReader" %>
 <%@page import="java.io.InputStreamReader"%>
 <%@page import="java.net.URL" %>
@@ -20,26 +20,23 @@
 				<td style="text-align:center;width:30%">
 					<button class="AddNewCategory" onclick="window.location.href='/AdminPageLearingApp/CategoryController'">Category</button>
 				</td>
-				<td style="text-align:center;width:30%">
-					<button class="AddJSONContent"><a href="JsonController">JSON</a></button>		
-				</td>
 			</tr>
 		</table>
 		<table style="width:100%;height:45%">
 			<tr>
 				<td style="width:50%">
-					<div class="CategoryListDiv" style="background-color: white; min-height:400px;max-height:400px">
-							<table style="background-color: #24387f;color:white; max-height:25px;width:100%">
-								<tr>
-									<td>
-										<h3>Category</h3>
-									</td>
-									<td style="text-align:right">
-										<button class="AddNewCategory" style="text-align:center;border-radius:12px">Add</button>
-									</td>
-								</tr>
-							</table>						
-						<div class="CategoryListDiv">
+					<div class="CategoryListDiv" style="background-color: white; min-height:400px;max-height:400px;">
+						<table style="background-color: #24387f;color:white; max-height:25px;width:100%">
+							<tr>
+								<td>
+									<h3>Category</h3>
+								</td>
+								<td style="text-align:right">
+									<button class="AddNewCategory" onclick="window.location.href='/AdminPageLearingApp/CategoryController'" style="text-align:center;border-radius:12px">Add</button>
+								</td>
+							</tr>
+						</table>						
+						<div class="CategoryListDiv" style="height:335px;overflow:auto">
 						    <c:forEach var="category" items="${categories}" varStatus="i">
 						    <div style="margin:5px;border-style: outset;border-width:2px">
 						    	<table style="width:100%">
@@ -63,7 +60,7 @@
 										<h3>Input JSON</h3>
 									</td>
 									<td style="text-align:right">
-										<button class="AddJSONContent" style="text-align:center;border-radius:12px">Add</button>
+										<button class="AddJSONContent" style="text-align:center;border-radius:12px">Send</button>
 									</td>
 								</tr>
 							</table>	
@@ -77,36 +74,38 @@
 		<table style="width:100%;height:65%">
 			<tr>
 				<td>
-					<div class="QuestionDiv" style="background-color: white;min-height:400px;">
-							<table style="background-color: #24387f;color:white; max-height:25px;width:100%">
-								<tr>
-									<td>
-										<h3>Question</h3>
-									</td>
-									<td style="text-align:right">
-										<button class="AddNewQuestion" style="text-align:center;border-radius:12px">Add</button>
-									</td>
-								</tr>
-							</table>		
-						<div class="QuestionList">
-							<c:forEach var="question" items="${questions}" varStatus="i">
-								<div style="margin:5px;border-style: outset;border-width:2px">
-							    	<table style="width:100%">
-									    <tr>
-									    	<td>${question.text}</td>
-									    	<td style="text-align:right">${question.category}</td>
-									    </tr>	
-									    <table style="width:100%">
-									    	<tr>
-										    	<c:forEach var="answer" items="${question.answers}">
-										    		<td style="text-align:center">${answer.text}</td>
-										    	</c:forEach>
-										    </tr>	
-									    </table>						        
-								  </table>
-							    </div>
-							</c:forEach>
-						</div>
+					<div class="QuestionDiv" style="background-color: white;">
+						<table style="background-color: #24387f;color:white; max-height:25px;width:100%">
+							<tr>
+								<td>
+									<h3>Question</h3>
+								</td>
+								<td style="text-align:right">
+									<button class="AddNewQuestion" onclick="window.location.href='/AdminPageLearingApp/QuestionController'" style="text-align:center;border-radius:12px">Add</button>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div style="background-color: white;min-height:400px;overflow:auto">
+						<c:forEach var="question" items="${questions}" varStatus="i">
+							<div style="margin:5px;border-style: outset;border-width:2px">
+						    	<table style="width:100%">
+								    <tr>
+								    	<td>${question.text}</td>
+								    	<td style="text-align:right">${question.category.title}</td>
+								    </tr>							        
+							  </table>
+							  <table style="width:100%">
+							    	<tr>
+							    		<td>
+									    	<c:forEach var="answer" items="${question.answers}">
+									    		<td style="text-align:center;width:25%">${answer.text}</td>
+									    	</c:forEach>
+									    </td>
+								    </tr>	
+							    </table>
+						    </div>
+						</c:forEach>
 					</div>	
 				</td>
 			</tr>

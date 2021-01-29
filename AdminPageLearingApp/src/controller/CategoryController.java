@@ -3,6 +3,8 @@ package controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -62,6 +64,8 @@ public class CategoryController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		URL backendURL = new URL("http://51.137.215.185:9000/api/categories");
+		HttpURLConnection connection = (HttpURLConnection) backendURL.openConnection();
 		if(request.getParameter("submitButton") != null)
 		{
 			CategoryModel category = new CategoryModel();
@@ -82,19 +86,48 @@ public class CategoryController extends HttpServlet {
 				filled = true;
 			}
 			if(filled == true)
-			{
-				response.getOutputStream().println(objectToJson(category));
+			{				
+				connection.setRequestMethod("POST");
+				connection.setRequestProperty("Content-Type", "application/json; utf-8");
+				connection.setDoOutput(true);
+				try(OutputStream os = connection.getOutputStream()) 
+				{
+					byte[] input = objectToJson(category).getBytes("utf-8");
+					os.write(input,0,input.length);
+				}
+				catch(Exception ex)
+				{
+					connection.disconnect();
+					System.out.println("Send request error: \n" + ex.getMessage());
+				}
+				StringBuilder responseString = new StringBuilder();
+				try(BufferedReader br = new BufferedReader(
+				  new InputStreamReader(connection.getInputStream(), "utf-8"))) {				    
+				    String responseLine = null;
+				    while ((responseLine = br.readLine()) != null) {
+				        responseString.append(responseLine.trim());
+				    }
+				    System.out.println("Response Stream: " + response.toString());
+				}
+				catch(Exception ex)
+				{
+					connection.disconnect();
+					System.out.println("Get response error: \n" + ex.getMessage());
+				}
+				//TODO load indexcontroller
 			}
 			else
 			{
 				sb.append("Title: " + request.getParameter("categoryTitle") + "\n");
 				sb.append("Description: " + request.getParameter("descriptionCategoryTextfield") + "\n");
 				System.out.println(sb.toString() + "\n" + "There is something missing in category!");
+				connection.disconnect();
 			}
 		}
 		else
 		{
 			System.out.println("SubmitButton not found.");
+			connection.disconnect();
 		}
 	}
 	

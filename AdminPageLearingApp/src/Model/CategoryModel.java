@@ -5,11 +5,18 @@ import java.util.List;
 
 public class CategoryModel {
 	
+	private int id;
 	private String description;
 	private String title;
 	private String hash;
 	public static List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
 	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getDescription() {
 		return description;
 	}
@@ -61,6 +68,7 @@ public class CategoryModel {
 			sb.append("Description: " + item.getDescription() + "\n");
 			sb.append("Title: " + item.getTitle() + "\n");
 			sb.append("Hashcode: "+ item.getHash() + "\n");
+			sb.append("Id: " + item.getId() + "\n");
 		}
 		return sb.toString();
 	}

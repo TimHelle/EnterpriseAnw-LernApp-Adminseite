@@ -102,36 +102,36 @@
 									    <tr>
 									    	<td><input name="rightAnswerText" style="width:98%" placeholder="Type in your right answer here?"></td>
 									    </tr>  
-									    <tr>
+									    <!-- <tr>
 									    	<td><input name="rightAnswerDescription" style="width:98%" placeholder="Type in your explanation here?"></td>
-									    </tr>  
+									    </tr> -->  
 									    <tr>
 									    	<td><a>Wrong answer one:</a></td>
 									    </tr>							 
 									    <tr>
 									    	<td><input name="wrongAnswerOneText" style="width:98%" placeholder="Type in your wrong answer here?"></td>
 									    </tr>
-									    <tr>
+									    <!-- <tr>
 									    	<td><input name="wrongAnswerOneDescription" style="width:98%" placeholder="Type in your explanation here?"></td>
-									    </tr>
+									    </tr> -->
 									    <tr>
 									    	<td><a>Wrong answer two:</a></td>
 									    </tr>							 
 									    <tr>
 									    	<td><input name="wrongAnswerTwoText" style="width:98%" placeholder="Type in your wrong answer here?"></td>
 									    </tr> 
-									    <tr>
+									    <!-- <tr>
 									    	<td><input name="wrongAnswerTwoDescription" style="width:98%" placeholder="Type in your explanation here?"></td>
-									    </tr> 
+									    </tr> --> 
 									    <tr>
 									    	<td><a>Wrong answer three:</a></td>
 									    </tr>							 
 									    <tr>
 									    	<td><input name="wrongAnswerThreeText" style="width:98%" placeholder="Type in your wrong answer here?"></td>
 									    </tr> 
-									    <tr>
+									    <!-- <tr>
 									    	<td><input name="wrongAnswerThreeDescription" style="width:98%" placeholder="Type in your explanation here?"></td>
-									    </tr>
+									    </tr> -->
 								  </table>
 							    </div>
 							</div>

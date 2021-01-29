@@ -5,19 +5,21 @@ import java.util.List;
 
 public class QuestionModel {
 	
+	private int id;
 	private String text;
 	private String explanation;
-	private CategoryModel category;
-	private String hash;
+	private String hash;	
+	private SendCategoryModel category;
+	private CategoryModel category_1;	
 	private List<AnswerModel> answers = new ArrayList<AnswerModel>();
 	
 	public static List<QuestionModel> questionList = new ArrayList<QuestionModel>();
 	
-	public String getHash() {
-		return hash;
+	public int getId() {
+		return id;
 	}
-	public void setHash(String hash) {
-		this.hash = hash;
+	public void setId(int id) {
+		this.id = id;
 	}
 	public String getText() {
 		return text;
@@ -31,10 +33,22 @@ public class QuestionModel {
 	public void setExplanation(String explanation) {
 		this.explanation = explanation;
 	}
+	public String getHash() {
+		return hash;
+	}
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
 	public CategoryModel getCategory() {
-		return category;
+		return category_1;
 	}
 	public void setCategory(CategoryModel category) {
+		this.category_1 = category;
+	}
+	public SendCategoryModel getSendCategory() {
+		return category;
+	}
+	public void setSendCategory(SendCategoryModel category) {
 		this.category = category;
 	}
 	public List<AnswerModel> getAnswers() {
@@ -72,19 +86,18 @@ public class QuestionModel {
 		}
 	}
 	public static String ToStringQuestionList() {
-		StringBuilder sb = new StringBuilder();
-		StringBuilder answers = new StringBuilder();
+		StringBuilder sb = new StringBuilder();		
 		for(QuestionModel item : questionList) {
+			StringBuilder answers = new StringBuilder();
 			sb.append("Text: " + item.getText() + "\n");
 			sb.append("Explanation: " + item.getExplanation() + "\n");
+			sb.append("Hashcode: " + item.getHash() + "\n");
 			sb.append("Category: " + item.getCategory().getTitle() + "\n");
-			sb.append("Hashcode: " + item.getHash());
 			for(AnswerModel answerItem : item.getAnswers())
 			{
-				answers.append("Text: " + answerItem.getText() + "\n");
-				answers.append("Description: " + answerItem.getDescription() + "\n");
+				answers.append("\t Text: " + answerItem.getText() + "\n");
 			}
-			sb.append("Answer: " + answers.toString());
+			sb.append("Answer: \n" + answers.toString());
 		}
 		return sb.toString();
 	}
