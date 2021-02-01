@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -54,6 +55,7 @@ public class IndexController extends HttpServlet {
 		//Load the AdminPage.jsp		
 		try {
 			RequestDispatcher reqDis = request.getRequestDispatcher("AdminPage.jsp");
+			response.setHeader("Access-Control-Allow-Origin", "*"); 
 			reqDis.forward(request, response);
 			
 		} catch (IOException e) {
@@ -62,7 +64,6 @@ public class IndexController extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		URL backendURL = new URL("http://51.137.215.185:9000/api/questions");
 		HttpURLConnection connection = (HttpURLConnection) backendURL.openConnection();
 		if(request.getParameter("sendJson") != null)
@@ -121,8 +122,9 @@ public class IndexController extends HttpServlet {
 		else
 		{
 			System.out.println("sendJson not found.");
-		}
+		}		
 	}
+	
 	private List<SendQuestionModel> changeJsontextToQuestion(String json) throws IOException {
 		AnswerModel rightAnswer = new AnswerModel();
 		AnswerModel wrongAnswerOne = new AnswerModel();
