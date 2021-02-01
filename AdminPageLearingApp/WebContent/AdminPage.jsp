@@ -12,7 +12,7 @@
 </head>
 <body>
 	<div class="MainDiv" style="background-color: lightgray; margin-left:10%;margin-right:10%;box-shadow: 5px 5px 5px grey">
-		<form action="/AdminPageLearingApp/AdminPage" method="post">
+		<!-- <form action="/AdminPageLearingApp/AdminPage" method="post"> -->
 			<table style="background-color: #24387f;height:75px;width:100%">
 				<tr style="height:100%;width:100%">
 					<td style="text-align:center;width:30%;">
@@ -94,7 +94,7 @@
 									    <tr>
 									    	<td style="width:70%">${question.text}</td>
 									    	<td style="text-align:right;width:30%">${question.category.title}</td>
-									    	<td><button name="${question.id}">Delete</button></td>
+									    	<td><button name="delete" value="${question.id}" onclick="deleteQuestion(${question.id})">Delete</button></td>
 									    </tr>							        
 								  </table>
 								  <table style="width:100%">
@@ -112,7 +112,17 @@
 					</td>
 				</tr>
 			</table>
-		</form>
-	</div>
+		<!-- </form> -->
+	</div>	
+	<script type="text/javascript">
+		function deleteQuestion(id){
+			console.log(id);
+			url = "http://51.137.215.185:9000/api/questions/{" + id + "}"
+			fetch(url,{
+				method:'delete',
+				})
+				.then(respone =>response.json());
+		}
+	</script>
 </body>
 </html>
