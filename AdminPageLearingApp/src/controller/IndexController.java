@@ -333,11 +333,4 @@ public class IndexController extends HttpServlet {
 	    //TODO Hash mit speichern	    
 	    //System.out.println(QuestionModel.ToStringQuestionList());
 	}
-//	private void deleteQuestion(String id) throws IOException {	
-//		URL backendURL = new URL("http://51.137.215.185:9000/api/questions/");
-//		HttpURLConnection connection = (HttpURLConnection) backendURL.openConnection();
-//		connection.setRequestMethod("DELETE");
-//		connection.setRequestProperty("Content-Type", "application/json; utf-8");
-//		connection.setDoOutput(true);	    
-//	}
 }
