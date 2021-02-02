@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.CategoryModel;
 import Model.QuestionModel;
+import controller.ServiceHelper;
 
 /**
  * Servlet implementation class CateogoryController
@@ -48,7 +49,7 @@ public class CategoryController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		getCategories();
+		ServiceHelper.getCategories();
 		request.setAttribute("alreadyAvailableCategories", CategoryModel.getCategoryList());
 		
 		try {
@@ -79,7 +80,7 @@ public class CategoryController extends HttpServlet {
 				category.setTitle(request.getParameter("categoryTitle"));
 				category.setDescription(request.getParameter("descriptionCategoryTextfield"));
 				try {
-					category.setHash(hashCategory(category));
+					category.setHash(ServiceHelper.hashCategory(category));
 				} catch (NoSuchAlgorithmException e) {
 					e.printStackTrace();
 				}
@@ -92,7 +93,7 @@ public class CategoryController extends HttpServlet {
 				connection.setDoOutput(true);
 				try(OutputStream os = connection.getOutputStream()) 
 				{
-					byte[] input = objectToJson(category).getBytes("utf-8");
+					byte[] input = ServiceHelper.categoryToJson(category).getBytes("utf-8");
 					os.write(input,0,input.length);
 				}
 				catch(Exception ex)
@@ -129,71 +130,5 @@ public class CategoryController extends HttpServlet {
 			System.out.println("SubmitButton not found.");
 			connection.disconnect();
 		}
-	}
-	
-	private void getCategories() throws IOException {
-		CategoryModel.categoryList.clear();
-		
-		URL jsonpage = new URL("http://51.137.215.185:9000/api/categories");
-	    URLConnection urlcon = jsonpage.openConnection();	    
-	    
-	    StringBuffer jb = new StringBuffer();
-	    String line = null;
-	    try {
-	    	BufferedReader buffread = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
-	      while ((line = buffread.readLine()) != null)
-	        jb.append(line);
-	    } catch (Exception e) { /*report an error*/ }
-	    
-	    JSONArray jsonArray;
-	    
-	    try {
-	      jsonArray = new JSONArray(jb.toString());
-	    } catch (JSONException e) {
-	      throw new IOException("Error parsing JSON request string");
-	    }
-
-	    for(int i=0;i<jsonArray.length();i++) {
-	    	JSONObject item = jsonArray.getJSONObject(i);
-	    	CategoryModel category = new CategoryModel();
-	    	category.setDescription(item.optString("description"));
-	    	category.setTitle(item.getString("title"));
-	    	if(CategoryModel.addCategoryToList(category) != true) {
-	    		System.out.println("Category wurde nicht hinzugefügt.");
-	    	}	    	
-	    }
-	    //System.out.println(CategoryModel.ToStringCategoryList());
-	}
-	private String objectToJson(CategoryModel category) {
-		String json = "";
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			json = mapper.writeValueAsString(category);
-			return json;
-		}
-		catch(Exception ex) {
-			System.out.println(ex.getMessage());
-		}
-		return "Error";
-	}
-	
-	private String hashCategory(CategoryModel category) throws NoSuchAlgorithmException {
-		String QuestionString = category.getTitle() + category.getDescription();
-		MessageDigest digest = MessageDigest.getInstance("SHA-256");
-		byte[] hashbyte = digest.digest(QuestionString.getBytes(StandardCharsets.UTF_8));
-		String shaHex = bytesToHex(hashbyte);
-		return shaHex;
-	}
-	
-	private static String bytesToHex(byte[] hash) {
-	    StringBuilder hexString = new StringBuilder(2 * hash.length);
-	    for (int i = 0; i < hash.length; i++) {
-	        String hex = Integer.toHexString(0xff & hash[i]);
-	        if(hex.length() == 1) {
-	            hexString.append('0');
-	        }
-	        hexString.append(hex);
-	    }
-	    return hexString.toString();
 	}
 }
