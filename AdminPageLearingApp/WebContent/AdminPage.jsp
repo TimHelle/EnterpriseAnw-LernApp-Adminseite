@@ -16,17 +16,17 @@
 			<table style="background-color: #24387f;height:75px;width:100%">
 				<tr style="height:100%;width:100%">
 					<td style="text-align:center;width:30%;">
-						<button class="AddNewQuestion" onclick="window.location.href='/AdminPageLearingApp/QuestionController'">Question</button>
+						<button class="AddNewQuestion" onclick="window.location.href='/AdminPageLearingApp/QuestionController'">Add Question</button>
 					</td>
 					<td style="text-align:center;width:30%">
-						<button class="AddNewCategory" onclick="window.location.href='/AdminPageLearingApp/CategoryController'">Category</button>
+						<button class="AddNewCategory" onclick="window.location.href='/AdminPageLearingApp/CategoryController'">Add Category</button>
 					</td>
 				</tr>
 			</table>
 			<table style="width:100%;height:45%">
 				<tr>
-					<td style="width:50%">
-						<div class="CategoryListDiv" style="background-color: white; min-height:400px;max-height:400px;">
+					<td style="width:30%">
+						<div class="CategoryListDiv" style="background-color: white; height:100%;">
 							<table style="background-color: #24387f;color:white; max-height:25px;width:100%">
 								<tr>
 									<td>
@@ -37,7 +37,7 @@
 									</td>
 								</tr>
 							</table>						
-							<div class="CategoryListDiv" style="height:335px;overflow:auto">
+							<div class="CategoryListDiv" style="max-height:70%;overflow:auto">
 							    <c:forEach var="category" items="${categories}" varStatus="i">
 							    <div style="margin:5px;border-style: outset;border-width:2px">
 							    	<table style="width:100%">
@@ -54,8 +54,8 @@
 							</div>
 						</div>				
 					</td>
-					<td style="width:50%">
-						<div class="JSONDiv" style="background-color: white;max-height:400px;min-height:400px">
+					<td style="width:70%">
+						<div class="JSONDiv" style="background-color: white; height:100%;width:100%">
 								<table style="background-color: #24387f;color:white; max-height:25px;width:100%">
 									<tr>
 										<td>
@@ -66,8 +66,8 @@
 										</td>
 									</tr>
 								</table>	
-							<div class="JSONTextfieldDiv" style="text-align:center;padding-bottom:1px;">
-								<textarea type="text" name="JSONTextfield" style="width:90%;min-height:328px;max-height:328px;min-width:600px;max-width:600px"></textarea>
+							<div class="JSONTextfieldDiv" style="text-align:center;padding-bottom:1px;height:87%">
+								<textarea type="text" name="JSONTextfield" style="width:98%;height:100%"></textarea>
 							</div>
 						</div>				
 					</td>
