@@ -28,7 +28,7 @@
 									</td>
 								</tr>
 							</table>
-							<div class="CategoryListDiv">
+							<div class="CategoryListDiv"  style="overflow:auto;height:335px">
 							    <c:forEach var="alreadyAvailableCategory" items="${alreadyAvailableCategories}" varStatus="i">
 								    <div style="margin:5px;border-style: outset;border-width:2px">
 								    	<table style="width:100%">
@@ -54,7 +54,7 @@
 									</tr>
 								</table>						
 							<div class="CategoryDiv">
-							    <div style="margin:5px;border-style: outset;border-width:2px">
+							    <div style="margin:5px;border-style: outset;border-width:2px;">
 							    	<table style="width:100%">
 									    <tr style="width:100%">
 									    	<td><a>Title of your category: </a></td>
