@@ -32,6 +32,7 @@ import Model.CategoryModel;
 import Model.QuestionModel;
 import Model.SendCategoryModel;
 import Model.SendQuestionModel;
+import controller.ServiceHelper;
 
 /**
  * Servlet implementation class QuestionController
@@ -51,9 +52,8 @@ public class QuestionController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		getCategories();
+		ServiceHelper.getCategories();
 		request.setAttribute("categoriesForQuestion", CategoryModel.getCategoryList());
-		System.out.println("Im doGet: \n" + CategoryModel.ToStringCategoryList());
 		try {
 			RequestDispatcher reqDis = request.getRequestDispatcher("AddQuestionPage.jsp");
 			reqDis.forward(request, response);
@@ -120,7 +120,7 @@ public class QuestionController extends HttpServlet {
 				question.setCategory(sendCategory);
 				
 				try {
-					question.setHash(hashQuestion(question));
+					question.setHash(ServiceHelper.hashQuestion(question));
 				} catch (NoSuchAlgorithmException e) {
 					e.printStackTrace();
 				}
@@ -134,7 +134,7 @@ public class QuestionController extends HttpServlet {
 				connection.setDoOutput(true);
 				try(OutputStream os = connection.getOutputStream()) 
 				{
-					byte[] input = objectToJson(question).getBytes("utf-8");
+					byte[] input = ServiceHelper.sendQuestionModelToJson(question).getBytes("utf-8");
 					os.write(input,0,input.length);
 				}
 				catch(Exception ex)
@@ -174,75 +174,5 @@ public class QuestionController extends HttpServlet {
 			System.out.println("SubmitButton not found.");
 		}
 		
-	}	
-	
-	private String objectToJson(SendQuestionModel question) {
-		String json = "";
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			json = mapper.writeValueAsString(question);	
-			System.out.println(json);
-			return json;
-		}
-		catch(Exception ex) {
-			System.out.println(ex.getMessage());
-		}
-		return "Error";
-	}
-	
-	private String hashQuestion(SendQuestionModel question) throws NoSuchAlgorithmException {
-		String QuestionString = question.getText() + question.getExplanation();
-		MessageDigest digest = MessageDigest.getInstance("SHA-256");
-		byte[] hashbyte = digest.digest(QuestionString.getBytes(StandardCharsets.UTF_8));
-		String shaHex = bytesToHex(hashbyte);
-		return shaHex;
-	}
-	
-	private static String bytesToHex(byte[] hash) {
-	    StringBuilder hexString = new StringBuilder(2 * hash.length);
-	    for (int i = 0; i < hash.length; i++) {
-	        String hex = Integer.toHexString(0xff & hash[i]);
-	        if(hex.length() == 1) {
-	            hexString.append('0');
-	        }
-	        hexString.append(hex);
-	    }
-	    return hexString.toString();
-	}	
-	
-	private void getCategories() throws IOException {
-		CategoryModel.categoryList.clear();
-		
-		URL jsonpage = new URL("http://51.137.215.185:9000/api/categories");
-	    URLConnection urlcon = jsonpage.openConnection();	    
-	    
-	    StringBuffer jb = new StringBuffer();
-	    String line = null;
-	    try {
-	    	BufferedReader buffread = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
-	      while ((line = buffread.readLine()) != null)
-	        jb.append(line);
-	    } catch (Exception e) { /*report an error*/ }
-	    
-	    JSONArray jsonArray;
-	    
-	    try {
-	      jsonArray = new JSONArray(jb.toString());
-	    } catch (JSONException e) {
-	      throw new IOException("Error parsing JSON request string");
-	    }
-
-	    for(int i=0;i<jsonArray.length();i++) {
-	    	JSONObject item = jsonArray.getJSONObject(i);
-	    	CategoryModel category = new CategoryModel();
-	    	category.setId((int) item.opt("id"));
-	    	category.setDescription(item.optString("description"));
-	    	category.setTitle(item.optString("title"));
-	    	category.setHash(item.optString("hash"));
-	    	if(CategoryModel.addCategoryToList(category) != true) {
-	    		System.out.println("Category wurde nicht hinzugefügt.");
-	    	}	    	
-	    }
-	    //System.out.println(CategoryModel.ToStringCategoryList());
-	}
+	}		
 }

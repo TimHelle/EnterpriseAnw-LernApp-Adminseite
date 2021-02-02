@@ -33,7 +33,8 @@ import Model.CategoryModel;
 import Model.QuestionModel;
 import Model.SendCategoryModel;
 import Model.SendQuestionModel;
-import Model.UserModel;
+
+import controller.ServiceHelper;
 
 @WebServlet("/AdminPage")
 public class IndexController extends HttpServlet {
@@ -47,10 +48,10 @@ public class IndexController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		//Load all Categories from Backend
-		getCategories();
+		ServiceHelper.getCategories();
 		request.setAttribute("categories", CategoryModel.getCategoryList());
 		//Load all Questions from Backend
-		getQuestions();
+		ServiceHelper.getQuestions();
 		request.setAttribute("questions", QuestionModel.getQuestionList());
 		//Load the AdminPage.jsp		
 		try {
@@ -90,7 +91,7 @@ public class IndexController extends HttpServlet {
 				for(SendQuestionModel item : questions) {
 					try(OutputStream os = connection.getOutputStream()) 
 					{
-						byte[] input = objectToJson(item).getBytes("utf-8");
+						byte[] input = ServiceHelper.sendQuestionModelToJson(item).getBytes("utf-8");
 						os.write(input,0,input.length);
 					}
 					catch(Exception ex)
@@ -188,149 +189,5 @@ public class IndexController extends HttpServlet {
 	    	questions.add(question);
 	    }
 	    return questions;
-	}
-	private String objectToJson(SendQuestionModel question) {
-		String json = "";
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			json = mapper.writeValueAsString(question);	
-			System.out.println(json);
-			return json;
-		}
-		catch(Exception ex) {
-			System.out.println(ex.getMessage());
-		}
-		return "Error";
-	}
-	private void getCategories() throws IOException {
-		CategoryModel.categoryList.clear();
-		
-		URL jsonpage = new URL("http://51.137.215.185:9000/api/categories");
-	    URLConnection urlcon = jsonpage.openConnection();	
-	    
-	    StringBuffer jb = new StringBuffer();
-	    String line = null;
-	    try {
-	    	BufferedReader buffread = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
-	      while ((line = buffread.readLine()) != null)
-	        jb.append(line);
-	    } catch (Exception e) { /*report an error*/ }
-	    
-	    JSONArray jsonArray;
-	    
-	    try {
-	      jsonArray = new JSONArray(jb.toString());
-	    } catch (JSONException e) {
-	      throw new IOException("Error parsing JSON request string");
-	    }
-
-	    for(int i=0;i<jsonArray.length();i++) {
-	    	JSONObject item = jsonArray.getJSONObject(i);
-	    	CategoryModel category = new CategoryModel();
-	    	category.setId((int) item.opt("id"));
-	    	category.setDescription(item.optString("description"));
-	    	category.setTitle(item.optString("title"));
-	    	category.setHash(item.optString("hash"));
-	    	if(CategoryModel.addCategoryToList(category) != true && category != null) {
-	    		System.out.println("Category wurde nicht hinzugefügt.");
-	    	}	    	
-	    }
-	    //System.out.println(CategoryModel.ToStringCategoryList());
-	}
-	
-	private void getUsers() throws IOException {
-		UserModel.userList.clear();
-		
-		URL jsonpage = new URL("");
-	    URLConnection urlcon = jsonpage.openConnection();	    
-	    
-	    StringBuffer jb = new StringBuffer();
-	    String line = null;
-	    try {
-	    	BufferedReader buffread = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
-	      while ((line = buffread.readLine()) != null)
-	        jb.append(line);
-	    } catch (Exception e) { /*report an error*/ }
-	    
-	    JSONArray jsonArray;
-	    
-	    try {
-	      jsonArray = new JSONArray(jb.toString());
-	    } catch (JSONException e) {
-	      throw new IOException("Error parsing JSON request string");
-	    }
-
-	    //TODO add in for the usermodel to list
-	    for(int i=0;i<jsonArray.length();i++) {
-	    	JSONObject item = jsonArray.getJSONObject(i);
-	    	UserModel user = new UserModel();
-	    	user.setUsername(item.optString("username"));
-	    	if(UserModel.addUserToList(user) != true) {
-	    		System.out.println("Category wurde nicht hinzugefügt.");
-	    	}	
-	    }
-	    
-	  //System.out.println(UserModel.ToStringUserList());
-	}
-	
-	private void getQuestions() throws IOException{
-		QuestionModel.questionList.clear();
-		
-		URL jsonpage = new URL("http://51.137.215.185:9000/api/questions");
-	    URLConnection urlcon = jsonpage.openConnection();
-	    
-	    StringBuffer jb = new StringBuffer();
-	    String line = null;
-	    try {
-	    	BufferedReader buffread = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
-	      while ((line = buffread.readLine()) != null)
-	        jb.append(line);
-	    } catch (Exception e) { /*report an error*/ }
-	    
-	    JSONArray jsonArray;
-	    
-	    try {
-	      jsonArray = new JSONArray(jb.toString());
-	    } catch (JSONException e) {
-	      throw new IOException("Error parsing JSON request string");
-	    }
-	    
-	    for(int i=0;i<jsonArray.length();i++) {
-	    	JSONObject item = jsonArray.getJSONObject(i);
-	    	QuestionModel question = new QuestionModel();
-	    	question.setId((int) item.opt("id"));
-	    	question.setText(item.optString("text"));
-	    	question.setExplanation(item.optString("explanation"));
-	    	
-	    	//Get CategoryId from API and change to CategoryModel 
-	    	CategoryModel category = new CategoryModel();
-	    	JSONObject categoryJsonObject = item.getJSONObject("category");	    	
-	    	String categoryTitle = categoryJsonObject.optString("title");
-	    	for(CategoryModel categoryItem : CategoryModel.categoryList) {
-	    		if(categoryItem.getTitle().equals(categoryTitle)) {
-	    			category.setTitle(categoryItem.getTitle());
-	    			category.setDescription(categoryItem.getDescription());
-	    			category.setId(categoryItem.getId());
-	    			category.setHash(categoryItem.getHash());
-	    			break;
-	    		}
-	    	}
-	    	question.setCategory(category);
-	    	//Get AnswerId´s from API and change to AnswerModel	 
-	    	JSONArray array = item.getJSONArray("answers");
-	    	for(int j =0; j<array.length();j++) {
-	    		AnswerModel answer = new AnswerModel();
-	    		JSONObject obj = array.getJSONObject(j);
-	    		answer.setText(obj.optString("text"));
-	    		answer.setIsCorrect(obj.optBoolean("isCorrect"));
-	    		question.setAnswer(answer);
-	    	}
-	    	if(QuestionModel.addQuestionToList(question) != true && question != null) {
-	    		System.out.println("Category wurde nicht hinzugefügt.");
-	    	}	   
-	    }
-	    
-	    //TODO Hash mit speichern	    
-	    //System.out.println(QuestionModel.ToStringQuestionList());
 	}
 }
