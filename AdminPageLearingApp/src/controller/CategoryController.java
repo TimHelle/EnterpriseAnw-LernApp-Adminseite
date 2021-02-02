@@ -108,6 +108,7 @@ public class CategoryController extends HttpServlet {
 				    while ((responseLine = br.readLine()) != null) {
 				        responseString.append(responseLine.trim());
 				    }
+				    response.sendRedirect("/AdminPageLearingApp/AdminPage");
 				    System.out.println("Response Stream: " + response.toString());
 				}
 				catch(Exception ex)
@@ -127,8 +128,9 @@ public class CategoryController extends HttpServlet {
 		}
 		else
 		{
-			System.out.println("SubmitButton not found.");
 			connection.disconnect();
+			response.sendRedirect("/AdminPageLearingApp/AdminPage");
+			System.out.println("SubmitButton not found.");
 		}
 	}
 }

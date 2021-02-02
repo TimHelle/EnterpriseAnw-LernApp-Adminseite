@@ -42,7 +42,8 @@
 							    <div style="margin:5px;border-style: outset;border-width:2px">
 							    	<table style="width:100%">
 									    <tr>
-									    	<td style="font-weight:bold">${category.title}</td>
+									    	<td style="font-weight:bold; width:90%">${category.title}</td>
+									    	<td><button onclick="window.location.href='/AdminPageLearingApp/DeleteCategoryController?id=${category.id}'">Delete</button></td>
 									    </tr>			
 									    <tr>
 									    	<td>${category.description}</td>
@@ -94,10 +95,10 @@
 									    <tr>
 									    	<td style="width:70%">${question.text}</td>
 									    	<td style="text-align:right;width:30%">${question.category.title}</td>
-									    	<td><button name="delete" value="${question.id}" onclick="deleteQuestion(${question.id})">Delete</button></td>
+									    	<td><button onclick="window.location.href='/AdminPageLearingApp/DeleteQuestionController?id=${question.id}'">Delete</button></td>
 									    </tr>							        
 								  </table>
-								  <table style="width:100%">
+								  <table style="width:100%;margin-top:10px">
 								    	<tr>
 								    		<td>
 										    	<c:forEach var="answer" items="${question.answers}">

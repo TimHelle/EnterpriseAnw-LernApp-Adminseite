@@ -55,8 +55,8 @@ public class IndexController extends HttpServlet {
 		request.setAttribute("questions", QuestionModel.getQuestionList());
 		//Load the AdminPage.jsp		
 		try {
-			RequestDispatcher reqDis = request.getRequestDispatcher("AdminPage.jsp");
-			response.setHeader("Access-Control-Allow-Origin", "*"); 
+			response.setHeader("Access-Control-Allow-Origin", "*");
+			RequestDispatcher reqDis = request.getRequestDispatcher("AdminPage.jsp");			 
 			reqDis.forward(request, response);
 			
 		} catch (IOException e) {
@@ -113,7 +113,8 @@ public class IndexController extends HttpServlet {
 						connection.disconnect();
 						System.out.println("Get response error: \n" + ex.getMessage());
 					}
-					response.getOutputStream().println(responseString.toString());	
+					response.sendRedirect("/AdminPageLearingApp/AdminPage");
+					//response.getOutputStream().println(responseString.toString());	
 				}
 			}
 			else {
@@ -123,7 +124,7 @@ public class IndexController extends HttpServlet {
 		else
 		{
 			System.out.println("sendJson not found.");
-		}		
+		}
 	}
 	
 	private List<SendQuestionModel> changeJsontextToQuestion(String json) throws IOException {

@@ -156,7 +156,9 @@ public class QuestionController extends HttpServlet {
 					connection.disconnect();
 					System.out.println("Get response error: \n" + ex.getMessage());
 				}
-				response.getOutputStream().println(responseString.toString());
+				response.sendRedirect("/AdminPageLearingApp/AdminPage");
+				connection.disconnect();
+				//response.getOutputStream().println(responseString.toString());
 			}
 			else {
 				sb.append("Question: " + request.getParameter("questionText") + "\n");
@@ -166,11 +168,14 @@ public class QuestionController extends HttpServlet {
 				sb.append("Wrong answer: " + request.getParameter("wrongAnswerOneText")+ "\n");
 				sb.append("Wrong answer: " + request.getParameter("wrongAnswerTwoText")+ "\n");
 				sb.append("Wrong answer: " + request.getParameter("wrongAnswerThreeText")+ "\n");
-				System.out.println(sb.toString() + "\n" + "There is something missing in question!");				
+				System.out.println(sb.toString() + "\n" + "There is something missing in question!");
+				connection.disconnect();
 			}			
 		}
 		else
 		{
+			connection.disconnect();
+			response.sendRedirect("/AdminPageLearingApp/AdminPage");
 			System.out.println("SubmitButton not found.");
 		}
 		
