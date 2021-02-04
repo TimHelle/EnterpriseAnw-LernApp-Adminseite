@@ -8,6 +8,7 @@ Needed Software:
 
 If the project is cloned into a Java IDE and everything is downloaded you can start the website.
 
-If u like to clone the other projects too here are the links:
-Backend:    https://github.com/TimHelle/EnterpriseAnw-LernApp-Backend
-Frontend:   https://github.com/TimHelle/EnterpriseAnw-LernApp-Frontend
+The Backend is one of three components for LearnApp-application. 
+- [Frontend of the application](https://github.com/TimHelle/EnterpriseAnw-LernApp-Frontend)
+- [Backend of the application](https://github.com/TimHelle/EnterpriseAnw-LernApp-Backend)
+
