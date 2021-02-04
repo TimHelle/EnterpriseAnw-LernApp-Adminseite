@@ -49,6 +49,7 @@ public class ServiceHelper {
 	    	category.setDescription(item.optString("description"));
 	    	category.setTitle(item.getString("title"));
 	    	category.setId(item.getInt("id"));
+	    	category.setHash(item.optString("hash"));
 	    	if(CategoryModel.addCategoryToList(category) != true) {
 	    		System.out.println("Category wurde nicht hinzugefügt.");
 	    	}	    	

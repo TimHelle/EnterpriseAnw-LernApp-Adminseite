@@ -12,7 +12,7 @@
 </head>
 <body>
 	<div class="MainDiv" style="background-color: lightgray; margin-left:10%;margin-right:10%;box-shadow: 5px 5px 5px grey">
-		<!-- <form action="/AdminPageLearingApp/AdminPage" method="post"> -->
+		<!--  -->
 			<table style="background-color: #24387f;height:75px;width:100%">
 				<tr style="height:100%;width:100%">
 					<td style="text-align:center;width:30%;">
@@ -54,22 +54,24 @@
 							</div>
 						</div>				
 					</td>
-					<td style="width:70%">
-						<div class="JSONDiv" style="background-color: white; height:100%;width:100%">
+					<td style="width:70%">					
+						<div class="JSONDiv" style="background-color: white; height:100%;width:100%">			
+							<form action="/AdminPageLearingApp/AdminPage" method="post" style="background-color: white; height:100%;width:100%">				
 								<table style="background-color: #24387f;color:white; max-height:25px;width:100%">
 									<tr>
 										<td>
 											<h3>Input JSON</h3>
 										</td>
-										<td style="text-align:right">
-											<button class="AddJSONContent" name="sendJson" style="text-align:center;border-radius:12px">Send</button>
+										<td style="text-align:right">											
+											<button class="AddJSONContent" name="sendJson" style="text-align:center;border-radius:12px">Send</button>											
 										</td>
 									</tr>
 								</table>	
-							<div class="JSONTextfieldDiv" style="text-align:center;padding-bottom:1px;height:87%">
-								<textarea type="text" name="JSONTextfield" style="width:98%;height:100%"></textarea>
-							</div>
-						</div>				
+								<div class="JSONTextfieldDiv" style="text-align:center;padding-bottom:1px;height:87%">
+									<textarea type="text" name="JSONTextfield" style="width:98%;height:100%"></textarea>
+								</div>
+							</form>							
+						</div>										
 					</td>
 				</tr>
 			</table>
@@ -115,15 +117,5 @@
 			</table>
 		<!-- </form> -->
 	</div>	
-	<script type="text/javascript">
-		function deleteQuestion(id){
-			console.log(id);
-			url = "http://51.137.215.185:9000/api/questions/{" + id + "}"
-			fetch(url,{
-				method:'delete',
-				})
-				.then(respone =>response.json());
-		}
-	</script>
 </body>
 </html>

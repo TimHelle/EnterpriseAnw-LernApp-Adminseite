@@ -6,12 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,9 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +24,7 @@ import Model.CategoryModel;
 import Model.QuestionModel;
 import Model.SendCategoryModel;
 import Model.SendQuestionModel;
+
 import controller.ServiceHelper;
 
 /**
@@ -143,8 +136,8 @@ public class QuestionController extends HttpServlet {
 					System.out.println("Send request error: \n" + ex.getMessage());
 				}
 				StringBuilder responseString = new StringBuilder();
-				try(BufferedReader br = new BufferedReader(
-				  new InputStreamReader(connection.getInputStream(), "utf-8"))) {				    
+				try {
+					BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));			    
 				    String responseLine = null;
 				    while ((responseLine = br.readLine()) != null) {
 				        responseString.append(responseLine.trim());
